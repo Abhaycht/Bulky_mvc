@@ -44,6 +44,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 return View(productVM);
             } 
             else {
+                //this is for edit
                 productVM.Product = _unitOfWork.Product.Get(u=>u.Id==id);
                 return View(productVM);
             }
@@ -53,6 +54,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (file != null)
                 {
@@ -64,7 +66,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                         file.CopyTo(fileStream);
                     }
 
-                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
+                    productVM.Product.ImageUrl = @"\images\product" + fileName;
                 }
                 _unitOfWork.Product.Add(productVM.Product);
                 _unitOfWork.Save();
