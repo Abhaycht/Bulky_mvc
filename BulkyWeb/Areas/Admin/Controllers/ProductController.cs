@@ -61,14 +61,37 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
 
-                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
-                        file.CopyTo(fileStream);
+                        //delete old image
+                        var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            //delete file
+                            System.IO.File.Delete(oldImagePath);
+                        }
                     }
 
-                    productVM.Product.ImageUrl = @"\images\product" + fileName;
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        //copy file to the images/product
+                        file.CopyTo(fileStream);
+                    }
+                    //returning path of the file to display on the view
+                    productVM.Product.ImageUrl = Path.Combine(productPath, fileName);
                 }
-                _unitOfWork.Product.Add(productVM.Product);
+                //check for if we want to update or add if id present update else add
+                if (productVM.Product.Id == 0)
+                {
+                    //add
+                    _unitOfWork.Product.Add(productVM.Product);
+                }
+                else 
+                {
+                    //delete 
+                    _unitOfWork.Product.Update(productVM.Product);
+                }
+                
                 _unitOfWork.Save();
                 TempData["success"] = "Product created successfully";
                 return RedirectToAction("Index");
