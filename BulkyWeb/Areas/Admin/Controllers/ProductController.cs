@@ -79,6 +79,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                     }
                     //returning path of the file to display on the view
                     productVM.Product.ImageUrl = Path.Combine(productPath, fileName);
+
                 }
                 //check for if we want to update or add if id present update else add
                 if (productVM.Product.Id == 0)
