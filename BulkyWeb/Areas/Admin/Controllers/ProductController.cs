@@ -78,7 +78,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                         file.CopyTo(fileStream);
                     }
                     //returning path of the file to display on the view
-                    productVM.Product.ImageUrl = Path.Combine(productPath, fileName);
+                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
 
                 }
                 //check for if we want to update or add if id present update else add
@@ -89,7 +89,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 }
                 else 
                 {
-                    //delete 
+                    //update 
                     _unitOfWork.Product.Update(productVM.Product);
                 }
                 
